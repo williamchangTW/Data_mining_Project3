@@ -2,11 +2,6 @@
 as title(just for Project3)
 contributed by <`williamchangTW`>
 
-### Requirement
-- 實作細節
-- 結果分析與討論
-- 計算效能分析
-- 從中學到什麼?
 #### Link Analysis Pratice
 - `HITS` & `PageRank`(Lecture 7,P_37, random jumping probability, damping facto=0.15)
   - caculate(8 graphs->6 graphs from file, 1 graph from Project1 transaction data):
@@ -18,6 +13,107 @@ contributed by <`williamchangTW`>
   - hub
   - authority
   - PageRank
+  
+## 題目
+- Please implement
+  - HITS and PageRank (Lecture 7, P37, random jumping probability, i.e., damping factor=0.15) and calculate authority, hub and PageRank values for the following 8 graphs
+    - 6 graphs in project3dataset
+    - 1 graphs from project1 transaction data (connect items in each row, bidirected or directed)
+  - SimRank to calculate pair-wise similarity of nodes (choice any parameter C you like) , using
+    - first 5 graphs of project3dataset.
+    - 答案:根據每個圖檔標示數字代表實作該圖檔(依序)
+    - `HIT_1` 
+      - 圖表只匯聚於一點(hub = Aut), 根據資料特性呈現一直線的參考, 所以在圖表的表現上, 會址單一匯聚在一個點, 也就是經過計算後每個點的排名都一樣0.0
+    - `HIT_2`
+      - 經過圖表的呈現也跟第一張圖一樣, 根據資料原始陳述, 若以 DAG 的特性去解釋, 會繞成一個圓形, 這在 HIT 演算法下也代表全部的節點同一排名
+    - `HIT_3`
+      - 這張圖比較有趣, 經錯8次迭代後hub & aut收斂在一個點, 位於 0.6~0.6025, 資料本若用圖呈現會呈現一個麻花捲的形狀, 這也代表在這幾個資料點會各自參考各自的強連結關係
+    - `HIT_4`
+      - 這張圖沒有交集但看hub 是往下降的, Aut 是相對往上升的, 代表被參考的少於參考別人的, 但經過運算排名後, 因為參考節點一的也佔多數, 所以得到的分數也很考
+    - 'HIT_5`
+      - 這結果運算花了 28 秒才作完, 相對花很大量的時間在處理大量的資料, 因為相對於前面幾個資料集, 這個資料集提升10倍左右, 這個圖表表示一件事, 點一再一開始擁有參考許多別的節點資料, 根據多次迭代後降到跟一開始的 Aut 差不多的範圍, 推測應該是其他節點的提升造成邊數的量提升, 相對的就沒有這麼高的 hub 數, 被分攤掉
+     - `HIT_6`
+        - hub 一直呈現 0 的狀態是因為, 他只有參考別人的數量
+     - `PR_1`
+     - `PR_2`
+     - `PR_3`
+     - `PR_4`
+     - `PR_5`
+     - `PR_6`
+     - `SR_1`
+     - `SR_2`
+     - `SR_3`
+     - `SR_4`
+     - `SR_5`
+      
+- Find a way (e.g., add/delete some links) to increase hub, authority, and PageRank of Node 1 in first 3 graphs respectively.    
+    - 答案: 依據 HIT 特性只要刪除節點伊以外的節點邊就可以達到相同效果
+    - 以下是根據圖檔變換裡面資料(檔名為HIT_ch_X, PR_ch_X)
+      - graph_1
+        - 1,2
+        - 2,3
+        - 3,4
+        - 4,5
+        - 5,6
+        - (增加所有能加的邊到 `node1`)
+        - 1,3
+        - 1,4
+        - 1,5
+        - 1,6
+        - 2,1
+        - 3,1
+        - 4,1
+        - 5,1
+        - conclusion:
+          - Hub increase from 0.4472136 to 0.70705751
+          - Auth increase from 0 to 0.53460939
+          - Pagerank increase from 0.02773825 to 0.38159199
+      - graph_2
+        - 1,2
+        - 2,3
+        - 3,4
+        - 4,5
+        - 5,1
+        - 2,4
+        - 2,5
+        - 3,5
+        - 1,3
+        - 1,4
+        - 1,5
+        - 2,1
+        - 3,1
+        - 4,1
+        - conclusion:
+          - Hub increase from 0.4472136 to 0.49711279
+          - Auth increase from 0.4472136 to 0.49717426
+          - Pagerank increase from 0.4472136 to 0.46201128
+      - graph_3
+        - 1,2
+        - 2,1
+        - 2,3
+        - 3,2
+        - 3,4
+        - 4,3
+        - 3,1
+        - 4,1
+        - 1,3
+        - 1,4
+        - conclusion:
+          - Hub increase from 0.37175742 to 0.63232892
+          - Auth increase from 0.37172346 to 0.55737738
+          - **Pagerank from 0.5 to 0.5**
+
+## Requirement
+- `Implementation detail`
+  - 參考講義的演算法，程式碼部分參考多線上資源及他人的 Github
+- `Result analysis and discussion`
+  - 
+- `Computation performance analysis`
+  - 
+- `Discussion`
+  - 全部寫在 **Note of Link analysis**，請參考下方
+
+        
 #### Qusetion & Discussion
 - More limitations about link analysis algorthm
 - Can link analysis algorithms find important page from Web?
@@ -26,7 +122,6 @@ contributed by <`williamchangTW`>
 - What is the effect of C parameter in SimRank
 - Any new idae about the link analysis algorithm
 ## Note of Link Analysis
-
 - 目的:
   - 根據瀏覽次數分析關聯性或重要性
 
@@ -47,7 +142,7 @@ contributed by <`williamchangTW`>
   - 當非常少的 edge，點上有大量的分數會被分離
   - 真正 authoritative pages 沒有被包含在 root 中
   - The document can contain many identical links to the same
-    document in another host (ಭ纏蟂褧)
+    document in another host 
   - Links are generated automatically (e.g. messages posted
     on newsgroups)
     • Containing human’s opinion ? 
