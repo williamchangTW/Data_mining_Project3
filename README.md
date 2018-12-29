@@ -27,14 +27,15 @@ contributed by <`williamchangTW`>
     - `HIT_2`
       - 經過圖表的呈現也跟第一張圖一樣, 根據資料原始陳述, 若以 DAG 的特性去解釋, 會繞成一個圓形, 這在 HIT 演算法下也代表全部的節點同一排名, 每個點的參考別人與被參考的是一樣的, 所以 hub = aut
     - `HIT_3`
-      - 這張圖比較有趣, 經錯8次迭代後hub & aut收斂在一個點, 位於 0.6~0.6025, 資料本若用圖呈現會呈現一個麻花捲的形狀, 這也代表在這幾個資料點會各自參考各自的強連結關係, 每個點的 hub = aut
+      - 這張圖比較有趣, 經錯8次迭代後hub & aut收斂在一個點, 位於 0.6~0.6025, 資料本若用圖呈現會呈現一個麻花捲的形狀, 這也代表在這幾個資料點會各自參考各自的強連結關係, 重要的是, 這張圖所陳述的像前兩張圖的合體, node 1 及 node 6 HIT 篹出來的分數沒有前兩個高, 因為中間的都有兩條指入線和指出線, 而 node 1 及 node 6 都是只有各一條
     - `HIT_4`
-      - 這張圖沒有交集但看hub 是往下降的, Aut 是相對往上升的, 代表被參考的少於參考別人的, 但經過運算排名後, 因為參考節點一的也佔多數, 所以得到的分數也很考
+      - 這張圖沒有交集但看hub 是往下降的, aut 是相對往上升的, 代表被參考的少於參考別人的, 但經過運算排名後, 因為參考 node 1 及 的也佔多數, 所以得到的分數也很高, 而所有 nodes aut 分數其實差不多的, 也可以顯示出整體的狀況
     - 'HIT_5`
-      - 這結果運算花了 28 秒才作完, 相對花很大量的時間在處理大量的資料, 因為相對於前面幾個資料集, 這個資料集提升10倍左右, 這個圖表表示一件事, 點一再一開始擁有參考許多別的節點資料, 根據多次迭代後降到跟一開始的 Aut 差不多的範圍, 推測應該是其他節點的提升造成邊數的量提升, 相對的就沒有這麼高的 hub 數, 被分攤掉
+      - 這結果運算花了 28 秒才作完, 相對花很大量的時間在處理大量的資料, 因為相對於前面幾個資料集, 這個資料集提升10倍左右, 這個圖表表示一件事, 點一再一開始擁有參考許多別的節點資料, 根據多次迭代後降到跟一開始的 aut 差不多的範圍, 推測應該是其他節點的提升造成邊數的量提升, 相對的就沒有這麼高的 hub 數, 被分攤掉, 這份資料出線的原因我覺得是要跟下一張圖做比較, 因為下一張圖要調整參數才有辦法找到關聯性
      - `HIT_6`
-        - hub 一直呈現 0 的狀態是因為, 他只有參考別人的數量
+        - hub 一直呈現 0, 這邊是依照資料特性作解釋, 我覺得第一個原因是因為資料量太多, 很多資料都呈現 0, 且因為 HIT 演算法的特性, 是根據邊的數量去運算每個節點的 aut 及 hub, 在這個概念下, 若線非常多且沒有什麼強連結性存在的話, 會造成整體的 HIT 值很低, 以至於**找不出任何關連性**, 算出來的結果能參考的價值也非常低, 因此, 有這樣的結果單純是因為原始資料並不是很好的判斷數據集, (註: 可以參考在上課講義中所提到的 **Topic drift**
      - `PR_1`
+        - 
      - `PR_2`
      - `PR_3`
      - `PR_4`
@@ -116,11 +117,18 @@ contributed by <`williamchangTW`>
         
 #### Qusetion & Discussion
 - More limitations about link analysis algorthm
+  - A: Topic drift, 
 - Can link analysis algorithms find important page from Web?
 - What issues from implement in a real web(performance, time cost)
+  - A: 分成三個演算法說明
+    1. 在 `HIT` algo 的情況下, 沒有辦法及時性的反應, 只有有增加網頁的 citation 或被 citation 都會影響整體的排名, 也很容易受到爬蟲的影響, 因為**爬蟲**會對所有相關標題進行搜尋, 所以相關路徑都會被影響, 整體效果會被影響, 也不具代表性
+    2. 在 `PageRank` 的情況是依據點所佔的分數, 把分數在分散給每個參考這個節點的子節點, 
+    3. 在 `SimRank`
 - Design a new link-based similarity measurement
 - What is the effect of C parameter in SimRank
-- Any new idae about the link analysis algorithm
+  - A: 根據公式所呈現的, C 的增加或者是減少是不會影響整體比例, 但如果單純以 C 會造成什麼影響來看, 根據我所找的論文解釋, C 這個參數會影響迭代次數, 當 C 越大會讓結果偏差值變小, 換句話說, 是讓精準度越高, 而如何去衡量選擇 C, 簡單來說, 根據不同應用而定, 當 C 越大需要迭代次數越多, 運算時間越久, 好處是得到精準度(但有可能大於某種數值結果都一樣), 若 C 越小, 則迭代次數越少, 運算效能也比較少, 但犧牲準確度(也有可能在很低的迭代次數就有很好的結果)
+- Any new idea about the link analysis algorithm
+  - 整體看起來似乎是 `SimeRank` 對於 `Link analysis` 的效果是比較好的, 然而, 在我所參考的文獻中, 有提到 `Simrank` 所發生的缺點, 
 ## Note of Link Analysis
 - 目的:
   - 根據瀏覽次數分析關聯性或重要性
@@ -232,11 +240,14 @@ contributed by <`williamchangTW`>
   - `SimRank` 得到兩兩之間的權重度量
 
 ###### Reference
-
+Tutorial
 - [協同過濾推薦算法總結](http://www.cnblogs.com/pinard/p/6349233.html)
 - [SimRank 協同推薦算法](https://cloud.tencent.com/developer/article/1184560)
 - [大規模社會網路中個體之間影響力度量](https://blog.argcv.com/articles/4534.c)
-
 - [上課講義]()
-
 - [菜鳥數位行銷企劃學習筆記](http://marketing.bankshung.net/2012/03/hitspagerank.html)
+Github
+- [pagerank.py](https://gist.github.com/diogojc/1338222)
+- [hits.py](https://github.com/DevSinghSachan/HITS-Hyperlink-Induced-Topic-Search/blob/master/hits.py)
+stackoverflow
+- [Calculating SimRank using NetworkX?](https://stackoverflow.com/questions/9767773/calculating-simrank-using-networkx)
